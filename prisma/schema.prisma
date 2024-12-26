@@ -1,0 +1,129 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid()) @db.Uuid
+  firstname String    @db.VarChar(50)
+  lastname  String    @db.VarChar(50)
+  email     String    @db.VarChar(100)
+  password  String    @db.VarChar(150)
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now()) @db.Timestamp()
+  updatedAt DateTime  @updatedAt @db.Timestamp()
+  deletedAt DateTime? @db.Timestamp()
+
+  products UserProduct[]
+}
+
+model Product {
+  id          Int       @id @default(autoincrement())
+  name        String    @db.VarChar(50)
+  description String    @db.VarChar(100)
+  slug        String    @unique @db.VarChar(50)
+  active      Boolean   @default(true)
+  createdAt   DateTime  @default(now()) @db.Timestamp()
+  updatedAt   DateTime  @updatedAt @db.Timestamp()
+  deletedAt   DateTime? @db.Timestamp()
+
+  Categories ProductCategory[]
+  Users      UserProduct[]
+}
+
+model Category {
+  id               Int       @id @default(autoincrement())
+  name             String    @db.VarChar(50)
+  description      String    @db.VarChar(100)
+  slug             String    @unique @db.VarChar(50)
+  parentCategoryId Int?
+  showPage         Boolean   @default(true)
+  active           Boolean   @default(true)
+  createdAt        DateTime  @default(now()) @db.Timestamp()
+  updatedAt        DateTime  @updatedAt @db.Timestamp()
+  deletedAt        DateTime? @db.Timestamp()
+
+  parent   Category?         @relation("parentCategory", fields: [parentCategoryId], references: [id])
+  children Category[]        @relation("parentCategory")
+  products ProductCategory[]
+}
+
+model ProductCategory {
+  id         Int      @id @default(autoincrement())
+  productId  Int
+  categoryId Int
+  createdAt  DateTime @default(now()) @db.Timestamp()
+
+  product  Product  @relation(fields: [productId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
+}
+
+model UserProduct {
+  id        BigInt    @id @default(autoincrement())
+  userId    String    @db.Uuid
+  productId Int
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now()) @db.Timestamp()
+  updatedAt DateTime  @updatedAt @db.Timestamp()
+  deletedAt DateTime? @db.Timestamp()
+
+  user    User    @relation(fields: [userId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  skus SKU[]
+}
+
+model ProductVariationType {
+  id          Int       @id @default(autoincrement())
+  description String    @db.VarChar(50)
+  active      Boolean   @default(true)
+  createdAt   DateTime  @default(now()) @db.Timestamp()
+  updatedAt   DateTime  @updatedAt @db.Timestamp()
+  deletedAt   DateTime? @db.Timestamp()
+
+  variations ProductVariation[]
+}
+
+model ProductVariation {
+  id          Int       @id @default(autoincrement())
+  description String    @db.VarChar(50)
+  typeId      Int
+  active      Boolean   @default(true)
+  createdAt   DateTime  @default(now()) @db.Timestamp()
+  updatedAt   DateTime  @updatedAt @db.Timestamp()
+  deletedAt   DateTime? @db.Timestamp()
+
+  type ProductVariationType @relation(fields: [typeId], references: [id])
+
+  skuVariations SKUVariation[]
+}
+
+model SKU {
+  id        BigInt    @id @default(autoincrement())
+  name      String    @db.VarChar(50)
+  productId BigInt
+  price     Decimal   @db.Decimal(10, 2)
+  quantity  Int       @default(0)
+  active    Boolean   @default(true)
+  createdAt DateTime  @default(now()) @db.Timestamp()
+  updatedAt DateTime  @updatedAt @db.Timestamp()
+  deletedAt DateTime? @db.Timestamp()
+
+  product UserProduct @relation(fields: [productId], references: [id])
+
+  skuVariations SKUVariation[]
+}
+
+model SKUVariation {
+  id          BigInt   @id @default(autoincrement())
+  skuId       BigInt
+  variationId Int
+  createdAt   DateTime @default(now()) @db.Timestamp()
+
+  sku       SKU              @relation(fields: [skuId], references: [id])
+  variation ProductVariation @relation(fields: [variationId], references: [id])
+}

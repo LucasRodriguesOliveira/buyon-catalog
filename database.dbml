@@ -1,0 +1,107 @@
+Project BuyonCatalog {
+  database_type: 'PostgreSQL'
+  note: '''
+  # Buyon Marketplace Catalog Database API
+  '''
+}
+
+Table User {
+  id        uuid            [pk]
+  firstname varchar   (50)  [not null]
+  lastname  varchar   (50)  [not null]
+  email     varchar   (100) [not null]
+  password  varchar   (150) [not null]
+  active    boolean         [not null, default: true]
+  createdAt timestamp       [not null]
+  updatedAt timestamp       [not null]
+  deletedAt timestamp
+}
+
+Table Product {
+  id          int           [pk, increment]
+  name        varchar (50)  [not null]
+  description varchar (100) [not null]
+  slug        varchar (50)  [not null, unique]
+  active      boolean       [not null, default: true]
+  createdAt   timestamp     [not null]
+  updatedAt   timestamp     [not null]
+  deletedAt   timestamp
+}
+
+Table Category {
+  id               int           [pk, increment]
+  name             varchar (50)  [not null]
+  description      varchar (100) [not null]
+  slug             varchar (50)  [not null, unique]
+  parentCategoryId int
+  showPage         boolean       [not null, default: true, note: 'Allow to see products with this category']
+  active           boolean       [not null, default: true]
+  createdAt        timestamp     [not null]
+  updatedAt        timestamp     [not null]
+  deletedAt        timestamp
+}
+
+Table ProductCategory {
+  id         int       [pk, increment]
+  productId  int       [not null]
+  categoryId int       [not null]
+  createdAt  timestamp [not null]
+}
+
+Table UserProduct {
+  id        bigint    [pk, increment]
+  userId    uuid      [not null]
+  productId int       [not null]
+  active    boolean   [not null, default: true]
+  createdAt timestamp [not null]
+  updatedAt timestamp [not null]
+  deletedAt timestamp
+}
+
+Table ProductVariationType {
+  id          int          [pk, increment]
+  description varchar (50) [not null]
+  active      boolean      [not null, default: true]
+  createdAt   timestamp    [not null]
+  updatedAt   timestamp    [not null]
+  deletedAt   timestamp
+}
+
+Table ProductVariation {
+  id          int          [pk, increment]
+  description varchar (50) [not null]
+  typeId      int          [not null]
+  active      boolean      [not null, default: true]
+  createdAt   timestamp    [not null]
+  updatedAt   timestamp    [not null]
+  deletedAt   timestamp
+}
+
+Table SKU {
+  id        bigint          [pk, increment]
+  name      varchar (50)    [not null]
+  productId bigint          [not null]
+  price     decimal (10, 2) [not null]
+  quantity  int             [not null, default: 0]
+  active    boolean         [not null, default: true]
+  createdAt timestamp       [not null]
+  updatedAt timestamp       [not null]
+  deletedAt timestamp
+}
+
+Table SKUVariation {
+  id          bigint    [pk, increment]
+  skuId       bigint    [not null]
+  variationId int       [not null]
+  createdAt   timestamp [not null]
+}
+
+Ref: Category.id < Category.parentCategoryId
+Ref: Product.id < ProductCategory.productId
+Ref: Category.id < ProductCategory.categoryId
+Ref: Product.id < UserProduct.productId
+Ref: ProductVariationType.id < ProductVariation.typeId
+Ref: User.id < UserProduct.userId
+Ref: UserProduct.id < SKU.productId
+Ref: SKU.id < SKUVariation.skuId
+Ref: ProductVariation.id < SKUVariation.variationId
