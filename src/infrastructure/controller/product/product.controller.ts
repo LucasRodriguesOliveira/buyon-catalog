@@ -10,6 +10,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  UseGuards,
   UseInterceptors,
   ValidationPipe,
 } from '@nestjs/common';
@@ -35,7 +36,13 @@ import { UpdateProductByIdUseCase } from 'src/usecases/product/update-product-by
 import { DeleteProductByIdProxy } from 'src/infrastructure/usecase-proxy/proxies/product/delete-product-by-id.proxy';
 import { DeleteProductByIdUseCase } from 'src/usecases/product/delete-product-by-id.usecase';
 import { DeleteProductPresenter } from './presenter/delete-product.presenter';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { JwtGuard } from 'src/infrastructure/common/guard/jwt.guard';
 
 @Controller('product')
 @ApiTags('Product')
@@ -70,6 +77,8 @@ export class ProductController {
   @ApiCreatedResponse({
     type: CreateProductPresenter,
   })
+  @ApiBearerAuth()
+  @UseGuards(JwtGuard)
   public async create(
     @Body(ValidationPipe) createProductDto: CreateProductDto,
   ) {
@@ -107,6 +116,8 @@ export class ProductController {
   @ApiOkResponse({
     type: UpdateProductPresenter,
   })
+  @ApiBearerAuth()
+  @UseGuards(JwtGuard)
   public async update(
     @Param('productId', ParseIntPipe) productId: number,
     @Body(ValidationPipe) updateProductDto: UpdateProductDto,
@@ -132,6 +143,8 @@ export class ProductController {
   @ApiOkResponse({
     type: DeleteProductPresenter,
   })
+  @ApiBearerAuth()
+  @UseGuards(JwtGuard)
   public async delete(@Param('productId', ParseIntPipe) productId: number) {
     let product: ProductModel;
 

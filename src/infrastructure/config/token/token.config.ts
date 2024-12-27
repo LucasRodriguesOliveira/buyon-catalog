@@ -9,7 +9,7 @@ export const tokenConfig = (): JwtModuleAsyncOptions => {
     imports: [ConfigModule],
     inject: [ConfigService],
     useFactory: (configService: ConfigService) => {
-      const { secret } = configService.get<TokenConfig>(
+      const { secret } = configService.getOrThrow<TokenConfig>(
         JWT_CONFIGTOKEN.description,
       );
 

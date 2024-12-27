@@ -8,4 +8,5 @@ import { swaggerConfig } from './swagger.config';
 export const envConfig: ConfigModuleOptions = {
   load: [appConfig, tokenConfig, pinoConfig, swaggerConfig],
   validationSchema: envSchema,
+  isGlobal: true,
 };

@@ -29,6 +29,14 @@ export class UserRepository implements IUserRepository {
     });
   }
 
+  public async findByEmail(email: string): Promise<UserModel | null> {
+    return this.prisma.user.findFirst({
+      where: {
+        email,
+      },
+    });
+  }
+
   public async update(
     userId: string,
     userToUpdate: Partial<UserModel>,
