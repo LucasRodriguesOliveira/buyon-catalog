@@ -10,10 +10,16 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  UseGuards,
   UseInterceptors,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { CreateUserProxy } from 'src/infrastructure/usecase-proxy/proxies/user/create-user.proxy';
 import { CreateUserUseCase } from 'src/usecases/user/create-user.usecase';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -33,6 +39,7 @@ import { FindUserByIdPresenter } from './presenter/find-user-by-id.presenter';
 import { UpdateUserPresenter } from './presenter/update-user.presenter';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { DeleteUserByIdPresenter } from './presenter/delete-user-by-id.presenter';
+import { JwtGuard } from 'src/infrastructure/common/guard/jwt.guard';
 
 @Controller('user')
 @ApiTags('User')
@@ -55,7 +62,9 @@ export class UserController {
   @ApiCreatedResponse({
     type: CreateUserPresenter,
   })
+  @ApiBearerAuth()
   @UseInterceptors(new PresenterInterceptor(CreateUserPresenter))
+  @UseGuards(JwtGuard)
   public async create(
     @Body(ValidationPipe) createUserDto: CreateUserDto,
   ): Promise<UserModel> {
@@ -67,7 +76,9 @@ export class UserController {
   @ApiOkResponse({
     type: [ListUsersPresenter],
   })
+  @ApiBearerAuth()
   @UseInterceptors(new PresenterInterceptor(ListUsersPresenter))
+  @UseGuards(JwtGuard)
   public async list(): Promise<UserModel[]> {
     return this.listUsersUseCase.run();
   }
@@ -77,7 +88,9 @@ export class UserController {
   @ApiOkResponse({
     type: FindUserByIdPresenter,
   })
+  @ApiBearerAuth()
   @UseInterceptors(new PresenterInterceptor(FindUserByIdPresenter))
+  @UseGuards(JwtGuard)
   public async findById(
     @Param('userId', ParseUUIDPipe) userId: string,
   ): Promise<UserModel> {
@@ -89,7 +102,9 @@ export class UserController {
   @ApiOkResponse({
     type: UpdateUserPresenter,
   })
+  @ApiBearerAuth()
   @UseInterceptors(new PresenterInterceptor(UpdateUserPresenter))
+  @UseGuards(JwtGuard)
   public async update(
     @Param('userId', ParseUUIDPipe) userId: string,
     @Body(ValidationPipe) updateUserDto: UpdateUserDto,
@@ -102,7 +117,9 @@ export class UserController {
   @ApiOkResponse({
     type: DeleteUserByIdPresenter,
   })
+  @ApiBearerAuth()
   @UseInterceptors(new PresenterInterceptor(DeleteUserByIdPresenter))
+  @UseGuards(JwtGuard)
   public async deleteById(
     @Param('userId', ParseUUIDPipe) userId: string,
   ): Promise<UserModel> {
