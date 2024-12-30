@@ -2,72 +2,69 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 import { randomInt } from 'crypto';
 import { CategoryModel } from 'src/domain/model/category.model';
-import { ProductModel } from 'src/domain/model/product.model';
 
 @Exclude()
-class CreateProductPresenterCategory extends CategoryModel {
-  @Expose()
+export class UpdateCategoryPresenter extends CategoryModel {
   @ApiProperty({
     type: Number,
     example: randomInt(100),
   })
+  @Expose()
   id: number;
 
-  @Expose()
   @ApiProperty({
     type: String,
-    example: 'Shoes',
+    example: 'Male Shoes',
   })
-  name: string;
-}
-
-@Exclude()
-export class CreateProductPresenter extends ProductModel {
   @Expose()
-  @ApiProperty({
-    type: Number,
-    example: randomInt(100),
-  })
-  id: number;
-
-  @Expose()
-  @ApiProperty({
-    type: String,
-    example: 'Some Product',
-  })
   name: string;
 
-  @Expose()
   @ApiProperty({
     type: String,
-    example: 'A short description explaining about the product',
+    example: 'Male Shoes of all sizes',
   })
+  @Expose()
   description: string;
 
-  @Expose()
   @ApiProperty({
     type: String,
-    example: 'some-product',
+    example: 'male-shoes',
   })
+  @Expose()
   slug: string;
 
-  @Expose()
   @ApiProperty({
     type: Boolean,
     example: true,
   })
+  @Expose()
+  showPage: boolean;
+
+  @ApiProperty({
+    type: Number,
+    example: randomInt(100),
+  })
+  @Expose()
+  parentCategoryId?: number;
+
+  @ApiProperty({
+    type: Boolean,
+    example: true,
+  })
+  @Expose()
   active: boolean;
 
-  @Expose()
   @ApiProperty({
     type: Date,
     example: new Date(),
   })
+  @Expose()
   createdAt: Date;
 
-  @Expose()
   @ApiProperty({
-    type: [CreateProductPresenterCategory],
+    type: Date,
+    example: new Date(),
   })
-  categories: CreateProductPresenterCategory[];
+  @Expose()
+  updatedAt: Date;
 }

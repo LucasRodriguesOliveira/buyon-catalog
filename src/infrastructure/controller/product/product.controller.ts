@@ -43,12 +43,18 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { JwtGuard } from 'src/infrastructure/common/guard/jwt.guard';
+import { AttachCategoryToProductProxy } from 'src/infrastructure/usecase-proxy/proxies/product/attach-category-to-product.proxy';
+import { AttachCategoryToProductUseCase } from 'src/usecases/product/attach-category-to-product.usecase';
+import { DeattachCategoryToProductProxy } from 'src/infrastructure/usecase-proxy/proxies/product/deattach-category-to-product.proxy';
+import { DeattachCategoryToProductUseCase } from 'src/usecases/product/deattach-category-to-product.usecase';
+import { LoggerService } from 'src/infrastructure/logger/logger.service';
 
 @Controller('product')
 @ApiTags('Product')
 export class ProductController {
   constructor(
     private readonly httpExceptionService: HttpExceptionService,
+    private readonly logger: LoggerService,
     @Inject(CreateProductProxy.Token)
     private readonly createProductUseCase: CreateProductUseCase,
     @Inject(FindProductByIdProxy.Token)
@@ -59,6 +65,10 @@ export class ProductController {
     private readonly updateProductByIdUseCase: UpdateProductByIdUseCase,
     @Inject(DeleteProductByIdProxy.Token)
     private readonly deleteProductByIdUseCase: DeleteProductByIdUseCase,
+    @Inject(AttachCategoryToProductProxy.Token)
+    private readonly attachCategoryToProductUseCase: AttachCategoryToProductUseCase,
+    @Inject(DeattachCategoryToProductProxy.Token)
+    private readonly deattachCategoryToProductUseCase: DeattachCategoryToProductUseCase,
   ) {}
 
   @Get()
@@ -82,7 +92,35 @@ export class ProductController {
   public async create(
     @Body(ValidationPipe) createProductDto: CreateProductDto,
   ) {
-    return this.createProductUseCase.run(createProductDto);
+    let product: ProductModel;
+
+    try {
+      product = await this.createProductUseCase.run(createProductDto);
+    } catch (err) {
+      const { code } = err as PrismaClientKnownRequestError;
+
+      if (PrismaClientKnownError.UNIQUE_CONSTRAINT === code) {
+        this.httpExceptionService.badRequest({
+          message: `There's another product with this slug value already`,
+          errCode: HttpStatus.BAD_REQUEST,
+        });
+      }
+
+      console.log({ err, createProductDto });
+
+      this.logger.debug(ProductController.name, code);
+
+      this.logger.error(
+        ProductController.name,
+        (err as Error).message,
+        (err as Error).stack,
+      );
+      this.httpExceptionService.internalServerError({
+        message: `Oh no! Something went wrong.`,
+      });
+    }
+
+    return product;
   }
 
   @Get(':productId')
@@ -156,5 +194,35 @@ export class ProductController {
     }
 
     return product;
+  }
+
+  @Put(':productId/attach/:categoryId')
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({
+    type: UpdateProductPresenter,
+  })
+  @ApiBearerAuth()
+  @UseInterceptors(new PresenterInterceptor(UpdateProductPresenter))
+  @UseGuards(JwtGuard)
+  public async attachCategory(
+    @Param('productId', ParseIntPipe) productId: number,
+    @Param('categoryId', ParseIntPipe) categoryId: number,
+  ): Promise<ProductModel> {
+    return this.attachCategoryToProductUseCase.run(productId, categoryId);
+  }
+
+  @Put(':productId/deattach/:categoryId')
+  @HttpCode(HttpStatus.OK)
+  @ApiOkResponse({
+    type: UpdateProductPresenter,
+  })
+  @ApiBearerAuth()
+  @UseInterceptors(new PresenterInterceptor(UpdateProductPresenter))
+  @UseGuards(JwtGuard)
+  public async deattachCategory(
+    @Param('productId', ParseIntPipe) productId: number,
+    @Param('categoryId', ParseIntPipe) categoryId: number,
+  ): Promise<ProductModel> {
+    return this.deattachCategoryToProductUseCase.run(productId, categoryId);
   }
 }

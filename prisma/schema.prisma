@@ -31,8 +31,8 @@ model Product {
   updatedAt   DateTime  @updatedAt @db.Timestamp()
   deletedAt   DateTime? @db.Timestamp()
 
-  Categories ProductCategory[]
-  Users      UserProduct[]
+  categories ProductCategory[]
+  users      UserProduct[]
 }
 
 model Category {
