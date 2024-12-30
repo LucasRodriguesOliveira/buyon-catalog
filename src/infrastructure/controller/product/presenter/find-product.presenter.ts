@@ -1,7 +1,25 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 import { randomInt } from 'crypto';
+import { CategoryModel } from 'src/domain/model/category.model';
 import { ProductModel } from 'src/domain/model/product.model';
+
+@Exclude()
+class FindProductPresenterCategory extends CategoryModel {
+  @Expose()
+  @ApiProperty({
+    type: Number,
+    example: randomInt(100),
+  })
+  id: number;
+
+  @Expose()
+  @ApiProperty({
+    type: String,
+    example: 'Shoes',
+  })
+  name: string;
+}
 
 @Exclude()
 export class FindProductPresenter extends ProductModel {
@@ -53,4 +71,10 @@ export class FindProductPresenter extends ProductModel {
     example: new Date(),
   })
   updatedAt: Date;
+
+  @Expose()
+  @ApiProperty({
+    type: [FindProductPresenterCategory],
+  })
+  categories: FindProductPresenterCategory[];
 }

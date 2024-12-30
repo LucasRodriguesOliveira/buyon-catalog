@@ -9,4 +9,9 @@ export interface IProductRepository {
     productToUpdate: Partial<ProductModel>,
   ): Promise<ProductModel>;
   deleteById(productId: number): Promise<ProductModel>;
+  attachCategory(productId: number, categoryId: number): Promise<ProductModel>;
+  deattachCategory(
+    productId: number,
+    categoryId: number,
+  ): Promise<ProductModel>;
 }

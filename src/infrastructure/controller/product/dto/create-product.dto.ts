@@ -1,11 +1,30 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
+  IsArray,
+  IsDefined,
+  IsInt,
   IsNotEmpty,
+  IsNumber,
   IsString,
   Matches,
   MaxLength,
+  Min,
   MinLength,
 } from 'class-validator';
+import { CategoryModel } from 'src/domain/model/category.model';
+
+class CreateProductDtoCategory extends CategoryModel {
+  @IsNotEmpty()
+  @IsNumber({ allowInfinity: false, allowNaN: false, maxDecimalPlaces: 0 })
+  @IsInt()
+  @Min(0)
+  @ApiProperty({
+    type: Number,
+    required: true,
+    minimum: 0,
+  })
+  id: number;
+}
 
 export class CreateProductDto {
   @IsNotEmpty()
@@ -48,4 +67,13 @@ export class CreateProductDto {
     pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*',
   })
   slug: string;
+
+  @IsDefined()
+  @IsArray()
+  @ApiProperty({
+    type: [CreateProductDtoCategory],
+    required: true,
+    minLength: 0,
+  })
+  categories: CreateProductDtoCategory[];
 }
