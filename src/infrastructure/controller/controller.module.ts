@@ -6,6 +6,7 @@ import { UserController } from './user/user.controller';
 import { AuthController } from './auth/auth.controller';
 import { CategoryController } from './category/category.controller';
 import { LoggerModule } from '../logger/logger.module';
+import { UserProductController } from './user-product/user-product.controller';
 
 @Module({
   imports: [UseCaseProxyModule.register(), HttpExceptionModule, LoggerModule],
@@ -14,6 +15,7 @@ import { LoggerModule } from '../logger/logger.module';
     UserController,
     AuthController,
     CategoryController,
+    UserProductController,
   ],
 })
 export class ControllerModule {}
