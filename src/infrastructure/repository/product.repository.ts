@@ -147,7 +147,6 @@ export class ProductRepository implements IProductRepository {
     productId: number,
     categoryId: number,
   ): Promise<ProductModel> {
-    console.log({ categoryId });
     return this.prisma.$transaction(async (t) => {
       const productCategory = await t.productCategory.findFirst({
         where: {
