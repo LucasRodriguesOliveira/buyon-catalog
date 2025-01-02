@@ -15,6 +15,8 @@ Table User {
   createdAt timestamp       [not null]
   updatedAt timestamp       [not null]
   deletedAt timestamp
+
+  Note: 'User registered in the system, can be a customer or a admin'
 }
 
 Table Product {
@@ -26,6 +28,16 @@ Table Product {
   createdAt   timestamp     [not null]
   updatedAt   timestamp     [not null]
   deletedAt   timestamp
+
+  Note: '''
+  General definition of a product
+  **Example**
+  - Keyboard
+  - Sneakers
+  - Smartphone
+  - Leather Jacket
+  - Jeans Pants
+  '''
 }
 
 Table Category {
@@ -39,6 +51,17 @@ Table Category {
   createdAt        timestamp     [not null]
   updatedAt        timestamp     [not null]
   deletedAt        timestamp
+
+  Note: '''
+  Defines which group each product belongs to
+
+  **Example**
+  - Clothes
+  - Wearable Gear
+  - Car Parts
+  - Food
+  - Shoes
+  '''
 }
 
 Table ProductCategory {
@@ -46,6 +69,10 @@ Table ProductCategory {
   productId  int       [not null]
   categoryId int       [not null]
   createdAt  timestamp [not null]
+
+  Note: '''
+  Allows a product to contain one or more categories
+  '''
 }
 
 Table UserProduct {
@@ -56,6 +83,10 @@ Table UserProduct {
   createdAt timestamp [not null]
   updatedAt timestamp [not null]
   deletedAt timestamp
+
+  Note: '''
+  A Product to be sold by a user
+  '''
 }
 
 Table ProductVariationType {
@@ -65,6 +96,15 @@ Table ProductVariationType {
   createdAt   timestamp    [not null]
   updatedAt   timestamp    [not null]
   deletedAt   timestamp
+
+  Note: '''
+  Groups the variations of a product
+
+  **Example**
+  - Size
+  - Color
+  - Weight
+  '''
 }
 
 Table ProductVariation {
@@ -75,6 +115,22 @@ Table ProductVariation {
   createdAt   timestamp    [not null]
   updatedAt   timestamp    [not null]
   deletedAt   timestamp
+
+  Note: '''
+  Variation options for a product
+
+  **Example**
+  - Size
+    - Shirt
+      - [Small, Medium, Large, sm, md, lg, xg, xxg]
+    - Shoes
+      - [36, 38, 39, 41]
+  - Color
+    - Mouse
+      - [Red, Green, Blue]
+    - Nail Polish
+      - [Velvet Red, Pale Blue, Green Moss]
+  '''
 }
 
 Table SKU {
@@ -87,6 +143,10 @@ Table SKU {
   createdAt timestamp       [not null]
   updatedAt timestamp       [not null]
   deletedAt timestamp
+
+  Note: '''
+  The product itself, defined with all the custom variations
+  '''
 }
 
 Table SKUVariation {
@@ -94,6 +154,8 @@ Table SKUVariation {
   skuId       bigint    [not null]
   variationId int       [not null]
   createdAt   timestamp [not null]
+
+  Note: 'Allows a product (sku) to contain one or more variations'
 }
 
 Ref: Category.id < Category.parentCategoryId

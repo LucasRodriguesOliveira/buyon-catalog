@@ -8,6 +8,7 @@ import { BcryptModule } from '../service/bcrypt/bcrypt.module';
 import { JwtTokenModule } from '../service/jwt/jwt.module';
 import { CategoryProxy } from './proxies/category/category.proxy';
 import { UserProductProxy } from './proxies/user-product/user-product.proxy';
+import { VariationTypeProxy } from './proxies/variation-type/variation-type.proxy';
 
 @Module({
   imports: [LoggerModule, RepositoryModule, BcryptModule, JwtTokenModule],
@@ -22,6 +23,7 @@ export class UseCaseProxyModule {
         ...AuthProxy.values(),
         ...CategoryProxy.values(),
         ...UserProductProxy.values(),
+        ...VariationTypeProxy.values(),
       ],
       exports: [
         ...ProductProxies.keys(),
@@ -29,6 +31,7 @@ export class UseCaseProxyModule {
         ...AuthProxy.keys(),
         ...CategoryProxy.keys(),
         ...UserProductProxy.keys(),
+        ...VariationTypeProxy.keys(),
       ],
     };
   }
