@@ -89,7 +89,7 @@ Table UserProduct {
   '''
 }
 
-Table ProductVariationType {
+Table Variation {
   id          int          [pk, increment]
   description varchar (50) [not null]
   active      boolean      [not null, default: true]
@@ -107,10 +107,10 @@ Table ProductVariationType {
   '''
 }
 
-Table ProductVariation {
+Table VariationItem {
   id          int          [pk, increment]
   description varchar (50) [not null]
-  typeId      int          [not null]
+  variationId int          [not null]
   active      boolean      [not null, default: true]
   createdAt   timestamp    [not null]
   updatedAt   timestamp    [not null]
@@ -162,8 +162,8 @@ Ref: Category.id < Category.parentCategoryId
 Ref: Product.id < ProductCategory.productId
 Ref: Category.id < ProductCategory.categoryId
 Ref: Product.id < UserProduct.productId
-Ref: ProductVariationType.id < ProductVariation.typeId
+Ref: Variation.id < VariationItem.variationId
 Ref: User.id < UserProduct.userId
 Ref: UserProduct.id < SKU.productId
 Ref: SKU.id < SKUVariation.skuId
-Ref: ProductVariation.id < SKUVariation.variationId
+Ref: Variation.id < SKUVariation.variationId

@@ -4,7 +4,7 @@ import { ProductRepository } from './product.repository';
 import { UserRepository } from './user.repository';
 import { CategoryRepository } from './category.repository';
 import { UserProductRepository } from './user-product.repository';
-import { VariationTypeRepository } from './variation-type.repository';
+import { VariationRepository } from './variation.repository';
 
 @Module({
   imports: [PrismaModule],
@@ -13,14 +13,14 @@ import { VariationTypeRepository } from './variation-type.repository';
     UserRepository,
     CategoryRepository,
     UserProductRepository,
-    VariationTypeRepository,
+    VariationRepository,
   ],
   exports: [
     ProductRepository,
     UserRepository,
     CategoryRepository,
     UserProductRepository,
-    VariationTypeRepository,
+    VariationRepository,
   ],
 })
 export class RepositoryModule {}

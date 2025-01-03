@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
   previewFeatures = ["strictUndefinedChecks"]
 }
 
@@ -78,7 +78,7 @@ model UserProduct {
   skus SKU[]
 }
 
-model ProductVariationType {
+model Variation {
   id          Int       @id @default(autoincrement())
   description String    @db.VarChar(50)
   active      Boolean   @default(true)
@@ -86,21 +86,20 @@ model ProductVariationType {
   updatedAt   DateTime  @updatedAt @db.Timestamp()
   deletedAt   DateTime? @db.Timestamp()
 
-  variations ProductVariation[]
+  items VariationItem[]
+  skus  SKUVariation[]
 }
 
-model ProductVariation {
+model VariationItem {
   id          Int       @id @default(autoincrement())
   description String    @db.VarChar(50)
-  typeId      Int
+  variationId Int
   active      Boolean   @default(true)
   createdAt   DateTime  @default(now()) @db.Timestamp()
   updatedAt   DateTime  @updatedAt @db.Timestamp()
   deletedAt   DateTime? @db.Timestamp()
 
-  type ProductVariationType @relation(fields: [typeId], references: [id])
-
-  skuVariations SKUVariation[]
+  variation Variation @relation(fields: [variationId], references: [id])
 }
 
 model SKU {
@@ -125,6 +124,6 @@ model SKUVariation {
   variationId Int
   createdAt   DateTime @default(now()) @db.Timestamp()
 
-  sku       SKU              @relation(fields: [skuId], references: [id])
-  variation ProductVariation @relation(fields: [variationId], references: [id])
+  sku       SKU       @relation(fields: [skuId], references: [id])
+  variation Variation @relation(fields: [variationId], references: [id])
 }
