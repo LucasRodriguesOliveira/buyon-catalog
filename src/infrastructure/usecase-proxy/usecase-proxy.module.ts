@@ -10,6 +10,7 @@ import { CategoryProxy } from './proxies/category/category.proxy';
 import { UserProductProxy } from './proxies/user-product/user-product.proxy';
 import { VariationProxy } from './proxies/variation/variation.proxy';
 import { VariationItemProxy } from './proxies/variation-item/variation-item.proxy';
+import { SKUProxy } from './proxies/sku/sku.proxy';
 
 @Module({
   imports: [LoggerModule, RepositoryModule, BcryptModule, JwtTokenModule],
@@ -26,6 +27,7 @@ export class UseCaseProxyModule {
         ...UserProductProxy.values(),
         ...VariationProxy.values(),
         ...VariationItemProxy.values(),
+        ...SKUProxy.values(),
       ],
       exports: [
         ...ProductProxies.keys(),
@@ -35,6 +37,7 @@ export class UseCaseProxyModule {
         ...UserProductProxy.keys(),
         ...VariationProxy.keys(),
         ...VariationItemProxy.keys(),
+        ...SKUProxy.keys(),
       ],
     };
   }

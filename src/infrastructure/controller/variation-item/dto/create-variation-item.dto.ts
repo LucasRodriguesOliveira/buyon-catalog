@@ -16,12 +16,12 @@ export class CreateVariationItemDto {
     type: String,
     example: 'Short',
     required: true,
-    minLength: 3,
+    minLength: 1,
     maxLength: 50,
   })
   @IsString()
   @IsNotEmpty()
-  @MinLength(3)
+  @MinLength(1)
   @MaxLength(50)
   @Transform(({ value }: TransformFnParams) => (value as string).trim())
   description: string;

@@ -75,7 +75,7 @@ model UserProduct {
   user    User    @relation(fields: [userId], references: [id])
   product Product @relation(fields: [productId], references: [id])
 
-  skus SKU[]
+  skus sku[]
 }
 
 model Variation {
@@ -87,7 +87,7 @@ model Variation {
   deletedAt   DateTime? @db.Timestamp()
 
   items VariationItem[]
-  skus  SKUVariation[]
+  skus  skuVariation[]
 }
 
 model VariationItem {
@@ -102,7 +102,7 @@ model VariationItem {
   variation Variation @relation(fields: [variationId], references: [id])
 }
 
-model SKU {
+model sku {
   id        BigInt    @id @default(autoincrement())
   name      String    @db.VarChar(50)
   productId BigInt
@@ -115,15 +115,19 @@ model SKU {
 
   product UserProduct @relation(fields: [productId], references: [id])
 
-  skuVariations SKUVariation[]
+  skuVariations skuVariation[]
+
+  @@map("SKU")
 }
 
-model SKUVariation {
+model skuVariation {
   id          BigInt   @id @default(autoincrement())
   skuId       BigInt
   variationId Int
   createdAt   DateTime @default(now()) @db.Timestamp()
 
-  sku       SKU       @relation(fields: [skuId], references: [id])
+  sku       sku       @relation(fields: [skuId], references: [id])
   variation Variation @relation(fields: [variationId], references: [id])
+
+  @@map("SKUVariation")
 }

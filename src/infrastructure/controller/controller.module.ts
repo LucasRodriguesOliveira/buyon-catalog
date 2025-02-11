@@ -9,6 +9,7 @@ import { LoggerModule } from '../logger/logger.module';
 import { UserProductController } from './user-product/user-product.controller';
 import { VariationController } from './variation/variation.controller';
 import { VariationItemController } from './variation-item/variation-item.controller';
+import { SKUController } from './sku/sku.controller';
 
 @Module({
   imports: [UseCaseProxyModule.register(), HttpExceptionModule, LoggerModule],
@@ -20,6 +21,7 @@ import { VariationItemController } from './variation-item/variation-item.control
     UserProductController,
     VariationController,
     VariationItemController,
+    SKUController,
   ],
 })
 export class ControllerModule {}
